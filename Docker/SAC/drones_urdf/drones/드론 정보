@@ -1,0 +1,102 @@
+<?xml version="1.0" ?>
+
+<!-- cf2라는 이름의 로봇을 정의 -->
+<robot name="cf2">
+
+  <!-- 로봇의 물리적 속성(properties) 정의 -->
+  <properties arm="0.0397"                 <!-- 팔 길이 (프로펠러 중심에서 본체 중심까지의 거리) -->
+             kf="3.16e-10"                 <!-- 프로펠러의 양력 계수 (Thrust coefficient) -->
+             km="7.94e-12"                 <!-- 프로펠러의 모멘트 계수 (Moment coefficient) -->
+             thrust2weight="2.25"          <!-- 추진력 대 무게 비율 -->
+             max_speed_kmh="30"            <!-- 최대 속도 (km/h) -->
+             gnd_eff_coeff="11.36859"      <!-- 지면 효과 계수 -->
+             prop_radius="2.31348e-2"      <!-- 프로펠러 반지름 (m) -->
+             drag_coeff_xy="9.1785e-7"     <!-- X, Y축 방향 항력 계수 -->
+             drag_coeff_z="10.311e-7"      <!-- Z축 방향 항력 계수 -->
+             dw_coeff_1="2267.18"          <!-- 와류 강하 계수 1 -->
+             dw_coeff_2=".16"              <!-- 와류 강하 계수 2 -->
+             dw_coeff_3="-.11" />          <!-- 와류 강하 계수 3 -->
+
+  <!-- 베이스 링크(base_link): 드론의 중심 부분 정의 -->
+  <link name="base_link"> 
+
+    <!-- 관성 정보(inertial): 드론의 질량 및 관성 모멘트 설정 -->
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>   <!-- 베이스 링크의 원점 위치 및 회전 설정 -->
+      <mass value="0.027"/>               <!-- 드론의 질량 (kg) -->
+      <inertia ixx="2.3951e-5" ixy="0.0" ixz="0.0"   <!-- 관성 텐서 값 -->
+               iyy="2.3951e-5" iyz="0.0" 
+               izz="3.2347e-5"/>
+    </inertial>
+
+    <!-- (주석 처리된) 참고 문헌 링크 -->
+    <!--
+    <links>
+      <carlos url="https://arxiv.org/pdf/1608.05786.pdf" />
+      <julian url="https://www.research-collection.ethz.ch/handle/20.500.11850/214143" />
+      <mit url="http://groups.csail.mit.edu/robotics-center/public_papers/Landry15.pdf" />
+    </links>
+    -->
+
+    <!-- 시각적 요소(visual): 드론의 3D 모델을 지정 -->
+    <visual>
+      <origin rpy="0 0 95" xyz="0 0 0"/>   <!-- 모델의 위치 및 회전 설정 (95도 회전) -->
+      <geometry>
+        <mesh filename="./cf2.dae" scale=" 1 1 1"/>  <!-- 3D 모델(.dae 포맷) 로드 -->
+      </geometry> 
+      <material name="grey">
+        <color rgba=".5 .5 .5 1"/>  <!-- 회색 (rgba: 0.5, 0.5, 0.5, 1) 설정 -->
+      </material> 
+    </visual>
+
+    <!-- 충돌 모델(collision): 충돌 감지를 위한 기하 구조 설정 -->
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>   <!-- 충돌 모델의 위치 및 회전 설정 -->
+      <geometry>
+        <cylinder radius=".06" length=".025"/>  <!-- 원통형 충돌 모델 (반지름 6cm, 길이 2.5cm) -->
+      </geometry>
+    </collision>  
+
+  </link>
+
+  <!-- 프로펠러 0 (prop0_link) 정의 -->
+  <link name="prop0_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0397 0 0"/>  <!-- 프로펠러 위치 (x=0.0397) -->
+      <mass value="0"/>  <!-- 질량 없음 (가벼운 가정) -->
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>  <!-- 관성 없음 -->
+    </inertial>
+  </link>
+  <joint name="prop0_joint" type="fixed">  <!-- 베이스 링크에 고정된 조인트 -->
+    <parent link="base_link"/>
+    <child link="prop0_link"/>
+  </joint>
+
+  <!-- 프로펠러 1 (prop1_link) 정의 -->
+  <link name="prop1_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0.0397 0"/>  <!-- 프로펠러 위치 (y=0.0397) -->
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="prop1_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="prop1_link"/>
+  </joint>
+
+  <!-- 프로펠러 2 (prop2_link) 정의 -->
+  <link name="prop2_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0397 0 0"/>  <!-- 프로펠러 위치 (x=-0.0397) -->
+      <mass value="0"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="prop2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="prop2_link"/>
+  </joint>
+
+  <!-- 프로펠러 3 (prop3_link) 정의 -->
+  <link name="prop3_link

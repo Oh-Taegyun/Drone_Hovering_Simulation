@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  drone_simulator:
+    build: .
+    container_name: torch_container
+    # SAC Folder 
+    volumes:
+      - ./SAC:/app
+    environment:
+      - DISPLAY=${DISPLAY}
+      - LOCAL_USER_ID=${LOCAL_USER_ID}
+    working_dir: /app
+    tty: true
+    network_mode: "host"
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
